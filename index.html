@@ -3,7 +3,7 @@
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>무드파인더 개인정보처리방침 v2.8</title>
+  <title>무드파인더 개인정보처리방침 v2.9</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -271,7 +271,7 @@
   <h1 style="font-size:20px; margin-top:8px;">개인정보처리방침</h1>
   <p>Privacy Policy</p>
   <button class="version-tag" id="versionHistoryBtn" type="button" aria-haspopup="dialog" aria-controls="versionHistoryModal" title="버전 변경 이력 보기">
-    v2.8 · 최종 업데이트: 2026년 5월
+    v2.9 · 최종 업데이트: 2026년 5월
   </button>
 </div>
 
@@ -282,7 +282,14 @@
       <button class="modal-close" id="versionHistoryClose" type="button" aria-label="닫기">×</button>
     </div>
     <div class="modal-body">
-      <h3>v2.8 (2026년 5월) — 현재 버전</h3>
+      <h3>v2.9 (2026년 5월) — 현재 버전</h3>
+      <ul>
+        <li>감정 기록 시 이용자가 선택적으로 첨부·업로드하는 사진 데이터 항목과 처리 목적 및 보유 기간 추가</li>
+        <li>Firebase Storage 기반 첨부 사진 저장, 접근 통제 및 비밀글(isSecret) 설정 시 이웃 피드 사진 썸네일 차단 원칙 명시</li>
+        <li>회원탈퇴 및 계정 통합 시 Firestore 데이터와 Storage 사진 파일을 Cloud Functions 기반 서버 측 파기 파이프라인으로 영구 삭제하는 절차 보완</li>
+      </ul>
+
+      <h3>v2.8 (2026년 5월)</h3>
       <ul>
         <li>만 14세 미만 아동의 일반 앱 기능 이용 가능 범위와 법정대리인 동의 절차를 명확화</li>
         <li>학술 연구 목적의 정서지능 데이터 분석 및 장기 종단연구 참여 대상을 만 19세 이상 성인으로 제한</li>
@@ -401,6 +408,11 @@
           <td><span class="badge red">필수</span></td>
         </tr>
         <tr>
+          <td>감정 첨부 사진 데이터<br><span style="font-size:12px; color:#777;">선택</span></td>
+          <td><b>이용자가 홈 화면에서 감정 기록 시 자발적으로 첨부·업로드하는 일상 사진 또는 이미지 파일</b> (<code>photoUrl</code>, <code>imageStoragePath</code>)<br>※ 처리 목적: 감정 일기의 시각적 아카이빙 및 회상 효과 극대화, 이웃 피드(선택 기능)를 통한 시각적 정서 공감 환경 제공<br>※ 보유 기간: <b>해당 감정 기록 삭제 시 즉시 파기 또는 회원탈퇴 시 즉시 완전 소거</b></td>
+          <td><span class="badge orange">선택</span></td>
+        </tr>
+        <tr>
           <td>정서지능 검사 데이터<br><span style="font-size:12px; color:#777;">종속변수</span></td>
           <td>정서지능 영역별 점수(scoreA~E 등), 총점 및 등급 (현재 시범 운영 및 시스템 검증용 'BEIS-10' 또는 향후 연구용으로 도입될 표준 척도 'K-WLEIS')</td>
           <td><span class="badge purple">연구 선택</span></td>
@@ -458,6 +470,9 @@
       QR 코드의 텍스트 데이터(사용자 ID)만 일시적으로 읽으며, 즉시 폐기됩니다.
     </div>
     <p>카메라 권한은 이웃 추가 기능 사용 시점에 요청되며, 거부 시 QR 스캔 기능을 제외한 모든 앱 기능을 정상적으로 사용할 수 있습니다.</p>
+    <div class="subtle-note">
+      ※ 단, 이용자가 감정 기록 시 사진을 별도로 선택하여 첨부·업로드하는 경우 해당 사진 데이터는 본 방침의 수집 항목, 보안 조치 및 파기 기준에 따라 처리됩니다.
+    </div>
   </div>
 
   <!-- 4. 정서지능 측정 서비스 -->
@@ -616,6 +631,7 @@
     <h3>6.1 저장 인프라</h3>
     <ul>
       <li>감정 기록은 기기 내 로컬(AsyncStorage)과 Google Firebase Firestore에 이중 저장됩니다.</li>
+      <li>감정 기록에 이용자가 선택적으로 첨부한 사진 파일은 Firebase Storage에 저장되며, 해당 감정 기록과 연결되는 <code>photoUrl</code> 및 <code>imageStoragePath</code> 값으로 관리됩니다.</li>
       <li>정서지능 측정 결과는 Firestore의 접근 권한이 엄격히 통제된 독립된 컬렉션에 저장됩니다.</li>
       <li>Firebase는 Google Cloud의 보안 인프라를 사용하며, 전송 중 데이터는 TLS로 암호화됩니다.</li>
     </ul>
@@ -630,6 +646,7 @@
       <li><strong>인증 보안</strong>: 인증은 Firebase Authentication을 통해 처리되며, 비밀번호는 앱에 저장되지 않습니다.</li>
       <li><strong>알림 토큰</strong>: 푸시 알림 토큰은 Expo Push Service를 통해 전송되며, 알림 발송 외 목적으로 사용되지 않습니다.</li>
     </ul>
+    <p>4) <b>[첨부 사진의 접근 통제 및 프라이버시 보호]</b> 업로드된 모든 사진 데이터는 안전한 클라우드 스토리지(Firebase Storage) 환경에 격리되어 저장되며, 백엔드 보안 규칙(Security Rules)에 의해 작성자 본인 및 승인된 이웃 외에는 접근이 원천 차단됩니다. 특히 이용자가 특정 감정 기록을 <b>'비밀글(isSecret)'로 설정할 경우, 이웃 피드 화면(context: neighbor)에서는 해당 사진 썸네일의 렌더링이 인프라 레벨에서 즉시 원천 차단</b>되어 이웃에게 노출되지 않도록 이중 프라이버시 가드가 작동합니다.</p>
   </div>
 
   <!-- 7. 제3자 서비스 -->
@@ -637,7 +654,7 @@
     <h2>7. 제3자 서비스</h2>
     <p>앱은 다음 외부 서비스를 사용합니다. 각 서비스의 개인정보처리방침이 적용됩니다:</p>
     <ul>
-      <li><span class="badge">Google</span> Firebase Authentication, Firestore</li>
+      <li><span class="badge">Google</span> Firebase Authentication, Firestore, Firebase Storage</li>
       <li><span class="badge green">Expo</span> Push Notification Service</li>
       <li><span class="badge orange">Google</span> Play 스토어 배포</li>
     </ul>
@@ -693,6 +710,10 @@
           <td>사용자 삭제 또는 계정 삭제 요청 시까지</td>
         </tr>
         <tr>
+          <td>감정 첨부 사진 데이터</td>
+          <td>해당 감정 기록 삭제 시 즉시 파기 또는 회원탈퇴 시 즉시 완전 소거</td>
+        </tr>
+        <tr>
           <td>정서지능 측정 결과</td>
           <td>개인정보 보호책임자 이메일(booklifedad@gmail.com)을 통한 삭제 또는 동의 철회 요청 처리 시까지, 또는 계정 삭제 시까지</td>
         </tr>
@@ -718,6 +739,11 @@
         </tr>
       </tbody>
     </table>
+
+    <h3>9.1 개인정보의 파기절차 및 파기방법</h3>
+    <p>1) <b>파기절차:</b> 이용자가 감정 기록을 삭제하거나 회원탈퇴를 진행하는 경우, 해당 데이터는 보유 목적 달성 여부 및 연결 데이터 존재 여부를 확인한 뒤 지체 없이 파기 대상에 포함됩니다.</p>
+    <p>2) <b>파기방법:</b> 데이터베이스(Firestore) 내 텍스트 및 점수 데이터는 비가역적인 전산 파기 처리를 수행하며, <b>스토리지 버킷에 적재된 사진 파일(<code>imageStoragePath</code> 매핑 데이터 포함) 역시 복구 및 재생이 불가능한 기술적 방법을 사용하여 즉시 영구 삭제(Purge)</b>합니다. 본 파기 메커니즘은 회원탈퇴 및 계정 통합 시 클라이언트가 아닌 독립된 서버 측 전산 파기 파이프라인(Cloud Functions)을 통해 안전하게 일괄 실행됩니다.</p>
+
     <div class="highlight">
       무드파인더는 '함께하는 이웃(소셜 커넥트)' 기능 및 닉네임 검색 제공을 위해, 이용자가 설정한 닉네임 및 공개 설정된 가장 최근의 감정 상태 1개가 닉네임 검색 및 이웃 기능 이용 과정에서 로그인된 사용자에게 표시될 수 있습니다.
     </div>
@@ -739,7 +765,7 @@
     <h2>11. 방침 변경 안내</h2>
     <p>
       본 방침이 변경될 경우 앱 내 업데이트 내역 및 이 페이지를 통해 고지합니다.
-      중요한 변경(특히 정서지능 측정 도구 변경, 연구 활용 범위 변경 등)은 앱 푸시 알림 및
+      중요한 변경(특히 정서지능 측정 도구 변경, 연구 활용 범위 변경, 사진 업로드 등 선택 기능의 개인정보 처리 방식 변경 등)은 앱 푸시 알림 및
       앱 내 공지를 통해 별도로 안내되며, 필요한 경우 재동의를 요청합니다.
     </p>
   </div>
@@ -756,7 +782,7 @@
   </div>
 
   <div class="footer">
-    <p>© 2026 무드파인더 · 본 방침(v2.8)은 2026년 5월부터 적용됩니다.</p>
+    <p>© 2026 무드파인더 · 본 방침(v2.9)은 2026년 5월부터 적용됩니다.</p>
   </div>
 
 </div>
